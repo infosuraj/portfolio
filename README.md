@@ -6,6 +6,7 @@
 ![React](https://img.shields.io/badge/react-61DAFB?logo=react&logoColor=black)
 ![MongoDB](https://img.shields.io/badge/mongodb-47A248?logo=mongodb&logoColor=white)
 ![ImageKit](https://img.shields.io/badge/imagekit-1D4ED8?logo=icloud&logoColor=white)
+![Mailchimp](https://img.shields.io/badge/mailchimp-FFE01B?logo=mailchimp&logoColor=black)
 
 🚀 **Live Demo:** [infosuraj.com](https://infosuraj.com)
 
