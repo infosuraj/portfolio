@@ -1,11 +1,11 @@
 # Suraj Kumar – Personal Portfolio
 
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![ImageKit](https://img.shields.io/badge/ImageKit-1D4ED8?style=for-the-badge&logo=icloud&logoColor=white)](https://imagekit.io/)
+![Dockerized](https://img.shields.io/badge/docker-ready-blue?logo=docker&logoColor=white)
+![Node.js](https://img.shields.io/badge/node.js-339933?logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-black?logo=express&logoColor=white)
+![React](https://img.shields.io/badge/react-61DAFB?logo=react&logoColor=black)
+![MongoDB](https://img.shields.io/badge/mongodb-47A248?logo=mongodb&logoColor=white)
+![ImageKit](https://img.shields.io/badge/imagekit-1D4ED8?logo=icloud&logoColor=white)
 
 🚀 **Live Demo:** [infosuraj.com](https://infosuraj.com)
 
