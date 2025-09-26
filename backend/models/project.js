@@ -19,7 +19,17 @@ const projectSchema = new mongoose.Schema(
     },
     // --- End New Thumbnail Fields ---
 
-    gallery: { type: [String], default: [] }, // This remains for the main project image gallery
+    // Gallery now stores objects with url and thumbnail
+    gallery: {
+      type: [
+        {
+          url: { type: String, required: true },       // full-size file URL
+          thumbnail: { type: String, default: "" },    // thumbnail URL
+        },
+      ],
+      default: [],
+    },
+
     selected: { type: Boolean, default: false },
   },
   { timestamps: true }

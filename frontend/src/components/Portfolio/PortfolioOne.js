@@ -31,38 +31,70 @@ const PortfolioOne = () => {
 
                     // --- Determine largeScreenSrc ---
                     if (item.thumbnail && item.thumbnail.largeScreen) {
-                      largeScreenSrc = transformImageKitUrl(item.thumbnail.largeScreen, {width: 960, height: 540, crop: true, quality: 80, format: "auto"});
+                      largeScreenSrc = transformImageKitUrl(item.thumbnail.largeScreen, {
+                        width: 960,
+                        height: 540,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else if (item.thumbnail && item.thumbnail.smallScreen) {
-                      // If no specific largeScreen thumbnail, but smallScreen exists, use it as a fallback with large screen transformation
-                      largeScreenSrc = transformImageKitUrl(item.thumbnail.smallScreen, {width: 960, height: 540, crop: true, quality: 80, format: "auto"});
+                      // Fallback to smallScreen thumbnail if largeScreen not available
+                      largeScreenSrc = transformImageKitUrl(item.thumbnail.smallScreen, {
+                        width: 960,
+                        height: 540,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else if (item.gallery && item.gallery.length > 0) {
-                      // Fallback to first gallery image for large screen
-                      let galleryUrl = item.gallery[0];
-                      if (galleryUrl.endsWith(".mp4") || galleryUrl.includes("video")) {
-                        galleryUrl = transformImageKitUrl(galleryUrl,{ width: 960, height: 540, crop: true, quality: 80, format: "auto", isThumbnail: true });
-                      }
-                      largeScreenSrc = transformImageKitUrl(galleryUrl, {width: 960, height: 540, crop: true, quality: 80, format: "auto"});
+                      // Fallback to first gallery image object
+                      const firstGalleryItem = item.gallery[0];
+                      const gallerySrc = firstGalleryItem.url;
+                      largeScreenSrc = transformImageKitUrl(gallerySrc, {
+                        width: 960,
+                        height: 540,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else {
-                      // Ultimate fallback if no suitable images found
-                      largeScreenSrc = ""; // Provide a default placeholder
+                      // Ultimate fallback
+                      largeScreenSrc = ""; // optional placeholder
                     }
 
                     // --- Determine smallScreenSrc ---
                     if (item.thumbnail && item.thumbnail.smallScreen) {
-                      smallScreenSrc = transformImageKitUrl(item.thumbnail.smallScreen, {width: 384, height: 512, crop: true, quality: 80, format: "auto"});
+                      smallScreenSrc = transformImageKitUrl(item.thumbnail.smallScreen, {
+                        width: 384,
+                        height: 512,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else if (item.thumbnail && item.thumbnail.largeScreen) {
-                      // If no specific smallScreen thumbnail, but largeScreen exists, use it as a fallback with small screen transformation
-                      smallScreenSrc = transformImageKitUrl(item.thumbnail.largeScreen, {width: 384, height: 512, crop: true, quality: 80, format: "auto"})
+                      // Fallback to largeScreen thumbnail if smallScreen not available
+                      smallScreenSrc = transformImageKitUrl(item.thumbnail.largeScreen, {
+                        width: 384,
+                        height: 512,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else if (item.gallery && item.gallery.length > 0) {
-                      // Fallback to first gallery image for small screen
-                      let galleryUrl = item.gallery[0]; // Get the first gallery URL again
-                      if (galleryUrl.endsWith(".mp4") || galleryUrl.includes("video")) {
-                        galleryUrl = transformImageKitUrl(galleryUrl,{ width: 384, height: 512, crop: true, quality: 80, format: "auto", isThumbnail: true });
-                      }
-                      smallScreenSrc = transformImageKitUrl(galleryUrl, {width: 384, height: 512, crop: true, quality: 80, format: "auto"})
+                      // Fallback to first gallery image object
+                      const firstGalleryItem = item.gallery[0];
+                      const gallerySrc = firstGalleryItem.url;
+                      smallScreenSrc = transformImageKitUrl(gallerySrc, {
+                        width: 384,
+                        height: 512,
+                        crop: true,
+                        quality: 80,
+                        format: "auto",
+                      });
                     } else {
-                      // Ultimate fallback if no suitable images found
-                      smallScreenSrc = ""; // Provide a default placeholder
+                      // Ultimate fallback
+                      smallScreenSrc = ""; // optional placeholder
                     }
 
                     // Render the picture element using the determined sources

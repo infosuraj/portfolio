@@ -1,52 +1,54 @@
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 // const IMAGEKIT_PUBLIC_API_KEY = process.env.REACT_APP_IMAGEKIT_PUBLIC_API_KEY;
-const IMAGEKIT_UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload";
+// The frontend no longer needs the ImageKit upload URL directly
+// const IMAGEKIT_UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload";
 
 export const handleFileUpload = async (file, folder) => {
   try {
-    const authUrl = process.env.REACT_APP_API_BASE_URL;
-
-    const authRes = await fetch(`${authUrl}/uploads/auth`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("adminToken")}`, // Only for backend auth
-      },
-    });
-
-    const { signature, token, expire } = await authRes.json();
-
-    if (!signature || !token || !expire) {
-      throw new Error("Invalid auth response from server");
-    }
+    // We now send the file directly to our backend's secure upload endpoint.
+    const uploadUrl = `${BASE_URL}/uploads/upload`;
 
     const formData = new FormData();
     formData.append("file", file);
+    
+    // The backend can get the original file name, but including it is good practice
     formData.append("fileName", file.name);
-    formData.append("publicKey", process.env.REACT_APP_IMAGEKIT_PUBLIC_API_KEY);
-    formData.append("signature", signature);
-    formData.append("token", token);
-    formData.append("expire", expire);
+
+    // The backend is responsible for generating and handling these credentials
+    // formData.append("publicKey", process.env.REACT_APP_IMAGEKIT_PUBLIC_API_KEY);
+    // formData.append("signature", signature);
+    // formData.append("token", token);
+    // formData.append("expire", expire);
 
     if (folder) {
-      formData.append("folder", `/${folder}`);
+      formData.append("folder", folder); // Changed to not include leading slash as the backend handles it
     }
 
-    const response = await fetch(IMAGEKIT_UPLOAD_URL, {
+    // This single fetch call now sends the file to your backend
+    // The Authorization header is crucial to protect the backend route
+    const response = await fetch(uploadUrl, {
       method: "POST",
-      body: formData, // ✅ No headers here
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+      },
     });
 
     const result = await response.json();
     if (!response.ok) {
-      throw new Error(result.message || "ImageKit upload failed");
+      throw new Error(result.message || "Backend upload failed");
     }
 
-    return result.url;
+    // The backend now returns the URL directly
+    return {
+      url: result.url,
+      thumbnail: result.thumbnail, // <-- include thumbnail
+    };
   } catch (error) {
     console.error("Upload error:", error);
     throw error;
   }
 };
-
 
 
 export const loginRequest = async (username, password) => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 
 const UnsubscribeForm = () => {
   const [formData, setFormData] = useState({
@@ -271,9 +272,13 @@ const UnsubscribeForm = () => {
   `;
 
   return (
-    <div className="container-center">
+    <>
+    <Helmet>
       <title>Unsubscribe Newsletter - INFOSURAJ</title>
       <meta name="description" content="Manage your newsletter subscription preferences. Unsubscribe from future emails from INFOSURAJ." />
+      <meta name="robots" content="noindex, follow" />
+    </Helmet>
+    <div className="container-center">
       <style>{customStyles}</style>
       <div className="card">
         {/* Banner at the very top of the card */}
@@ -338,6 +343,7 @@ const UnsubscribeForm = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

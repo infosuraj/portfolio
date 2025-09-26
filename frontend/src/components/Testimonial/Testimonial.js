@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { transformImageKitUrl } from '../../utils/ImageKitUrlModify'; // Import the utility function
+import ExpandableText from './ExpandableText'; //
 
 const Testimonial = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -121,31 +122,32 @@ const Testimonial = () => {
         <div className="col-12">
           <div className="swiper-container slider-min items"
                style={{
-                 paddingLeft: '10%', // Adjust these values as before
+                 paddingLeft: '10%',
                  paddingRight: '10%',
                  overflow: 'hidden'
                }}>
             <div className="swiper-wrapper">
               {testimonials.map((testimonial) => (
                 <div className="swiper-slide item" key={testimonial._id}>
-                  {/* NEW: Content Wrapper Div */}
                   <div className="testimonial-content-wrapper mx-auto"
-                       style={{ maxWidth: '700px', width: '90%' /* Adjust these values */ }}>
+                       style={{ maxWidth: '700px', width: '90%' }}>
                     <div className="testimonial text-center border rounded-5 p-4 p-md-0">
                       <div className="testimonial-meta">
-                        <div className="testimonial-thumb">
-                          <img
-                            className="rounded-circle"
-                            src={transformImageKitUrl(testimonial.image, {width: 800, crop: true, quality: 80, format: "auto"})}
-                            alt={testimonial.name}
-                            style={{ opacity: 0 }}
-                          />
-                        </div>
-                        <h5 className="client-name mt-3 mb-1">{testimonial.name}</h5>
-                        <span className="client-position">{testimonial.position}</span>
+                        {/* ... testimonial-thumb and other meta info ... */}
+                         <div className="testimonial-thumb">
+                           <img
+                             className="rounded-circle"
+                             src={transformImageKitUrl(testimonial.image, {width: 800, crop: true, quality: 80, format: "auto"})}
+                             alt={testimonial.name}
+                             style={{ opacity: 0 }}
+                           />
+                         </div>
+                         <h5 className="client-name mt-3 mb-1">{testimonial.name}</h5>
+                         <span className="client-position">{testimonial.position}</span>
                       </div>
                       <div className="testimonial-content mt-4">
-                        <p>{testimonial.content}</p>
+                          {/* Just pass the text. The component handles the rest! */}
+                          <ExpandableText text={testimonial.content} />
                       </div>
                     </div>
                   </div>

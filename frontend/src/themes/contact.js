@@ -10,15 +10,27 @@ import SearchModal from "../components/Miscellaneous/SearchModal";
 import OffcanvasMenu from "../components/Miscellaneous/OffcanvasMenu";
 import MagicCursor from "../components/Miscellaneous/MagicCursor";
 import LenisScroll from "../components/Header/LenisScroll";
+import { Helmet } from "react-helmet";
 
 const Contact = () => {
   return (
-    <div>
+    <>
+    <Helmet>
       <title>Get in Touch - INFOSURAJ</title>
       <meta
         name="description"
         content="Have a project in mind or just want to say hello? Reach out to INFOSURAJ for collaborations, inquiries, or feedback."
       />
+      <link rel="canonical" href="https://www.infosuraj.com/contact" />
+      <meta property="og:title" content="Get in Touch - INFOSURAJ" />
+      <meta property="og:description" content="Have a project in mind or just want to say hello? Reach out to INFOSURAJ for collaborations, inquiries, or feedback." />
+      <meta property="og:url" content="https://www.infosuraj.com/contact" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Get in Touch - INFOSURAJ" />
+      <meta name="twitter:description" content="Have a project in mind or just want to say hello? Reach out to INFOSURAJ for collaborations, inquiries, or feedback." />
+    </Helmet>
+    <div>
       {/* Rest of your Contact page content */}
       <MagicCursor />
       <Preloader />
@@ -35,6 +47,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

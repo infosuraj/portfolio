@@ -107,23 +107,41 @@ const PortfolioTwo = () => {
                 <div className="image-holder">
                   {(() => {
                     const mobileThumbnailSrc = (() => {
-                    // 1. Prioritize the dedicated smallScreen thumbnail
-                    if (item.thumbnail && item.thumbnail.smallScreen) {
-                      return transformImageKitUrl(item.thumbnail.smallScreen, {width: 384, height: 512, crop: true, quality: 80, format: "auto"});
-                    }else if (item.thumbnail && item.thumbnail.largeScreen){
-                        return transformImageKitUrl(item.thumbnail.largeScreen, {width: 384, height: 512, crop: true, quality: 80, format: "auto"});
-                    }
-                    // 2. Fallback to the first gallery image if available
-                    else if (item.gallery && item.gallery.length > 0) {
-                      let url = item.gallery[0];
-                      if (url.endsWith(".mp4") || url.includes("video")) {
-                        url = transformImageKitUrl(url,{ width: 384, height: 512, crop: true, quality: 80, format: "auto", isThumbnail: true });
+                      // 1. Prioritize the dedicated smallScreen thumbnail
+                      if (item.thumbnail && item.thumbnail.smallScreen) {
+                        return transformImageKitUrl(item.thumbnail.smallScreen, {
+                          width: 384,
+                          height: 512,
+                          crop: true,
+                          quality: 80,
+                          format: "auto",
+                        });
                       }
-                      return transformImageKitUrl(url, {width: 384, height: 512, crop: true, quality: 80, format: "auto"})
-                    }
-                    // 3. Ultimate fallback if no image sources are found
-                    return "/path/to/mobile-placeholder.jpg"; // Provide a default placeholder URL
-                  })();
+                      // 2. Fallback to largeScreen thumbnail if smallScreen is not available
+                      else if (item.thumbnail && item.thumbnail.largeScreen) {
+                        return transformImageKitUrl(item.thumbnail.largeScreen, {
+                          width: 384,
+                          height: 512,
+                          crop: true,
+                          quality: 80,
+                          format: "auto",
+                        });
+                      }
+                      // 3. Fallback to the first gallery image's thumbnail if available
+                      else if (item.gallery && item.gallery.length > 0) {
+                        const firstGalleryItem = item.gallery[0];
+                        const gallerySrc = firstGalleryItem.url; // Use thumbnail if exists
+                        return transformImageKitUrl(gallerySrc, {
+                          width: 384,
+                          height: 512,
+                          crop: true,
+                          quality: 80,
+                          format: "auto",
+                        });
+                      }
+                      // 4. Ultimate fallback if no image sources are found
+                      return "/path/to/mobile-placeholder.jpg"; // Provide a default placeholder URL
+                    })();
                     return (
                       <a className="card-thumb" href={`/portfolio-project/${item._id}/${slugify(item.title)}`}>
                         <img src={mobileThumbnailSrc} alt={item.title} width='100%'/>

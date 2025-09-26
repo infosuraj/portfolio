@@ -70,15 +70,19 @@ module.exports = (authenticateAdmin) => {
     try {
       const data = req.body;
 
-      if (!data.title || !data.description || !data.date || !data.task || !data.categoryYear) {
-        // Added more required fields based on your schema
-        return res.status(400).json({ message: "Missing required fields: title, description, date, task, and categoryYear" });
+      // Normalize gallery items
+      if (data.gallery && Array.isArray(data.gallery)) {
+        data.gallery = data.gallery.map((item) => {
+          // If item is string (old format), convert to { url, thumbnail: "" }
+          if (typeof item === "string") return { url: item, thumbnail: "" };
+          return item; // already { url, thumbnail }
+        });
       }
+
       const newProject = new Project(data);
       const saved = await newProject.save();
       res.status(201).json(saved);
     } catch (err) {
-      // Handle Mongoose validation errors more specifically if needed
       if (err.name === 'ValidationError') {
         const messages = Object.values(err.errors).map(val => val.message);
         return res.status(400).json({ message: "Validation error", errors: messages });
@@ -87,14 +91,26 @@ module.exports = (authenticateAdmin) => {
     }
   });
 
+
   // PUT (Update) an existing project by ID
   router.put("/:_id", authenticateAdmin, async (req, res) => {
     try {
+      const data = req.body;
+
+      // Normalize gallery items
+      if (data.gallery && Array.isArray(data.gallery)) {
+        data.gallery = data.gallery.map((item) => {
+          if (typeof item === "string") return { url: item, thumbnail: "" };
+          return item;
+        });
+      }
+
       const updated = await Project.findByIdAndUpdate(
         req.params._id,
-        req.body,
-        { new: true, runValidators: true } // `new: true` returns the updated document, `runValidators: true` runs schema validators on update
+        data,
+        { new: true, runValidators: true }
       );
+
       if (!updated) return res.status(404).json({ message: "Project not found" });
       res.status(200).json(updated);
     } catch (err) {
@@ -108,6 +124,7 @@ module.exports = (authenticateAdmin) => {
       res.status(500).json({ message: "Error updating project", error: err.message });
     }
   });
+
 
   // DELETE a project by ID
   router.delete("/:_id", authenticateAdmin, async (req, res) => {

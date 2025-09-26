@@ -14,15 +14,16 @@ import SearchModal from "../components/Miscellaneous/SearchModal";
 import OffcanvasMenu from "../components/Miscellaneous/OffcanvasMenu";
 import MagicCursor from "../components/Miscellaneous/MagicCursor";
 import LenisScroll from "../components/Header/LenisScroll";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   return (
+    <>
+      <Helmet>
+        <title>INFOSURAJ - Portfolio</title>
+        <meta name="description" content="Discover the latest web development projects, insightful articles, and services from Suraj. Specializing in modern web solutions." />
+      </Helmet>
     <div>
-      <title>INFOSURAJ - Portfolio</title>
-      <meta
-        name="description"
-        content="Discover the latest web development projects, insightful articles, and services from Suraj. Specializing in modern web solutions."
-      />
       <MagicCursor />
       <Preloader />
       <LenisScroll />
@@ -42,6 +43,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

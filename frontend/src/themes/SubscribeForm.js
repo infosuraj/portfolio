@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'; // Fixed import syntax
+import { Helmet } from 'react-helmet'; // For managing head tags
 
 const SubscribeForm = () => {
   // Removed lastName from formData state
@@ -270,9 +271,22 @@ const SubscribeForm = () => {
   `;
 
   return (
-    <div className="container-center">
+    <>
+    <Helmet>
       <title>Subscribe Newsletter - INFOSURAJ</title>
       <meta name="description" content="Join the INFOSURAJ newsletter to get the latest updates, exclusive content, and insights directly to your inbox." />
+      <meta property="og:title" content="Subscribe Newsletter - INFOSURAJ" />
+      <meta property="og:description" content="Join the INFOSURAJ newsletter to get the latest updates, exclusive content, and insights directly to your inbox." />
+      <meta property="og:image" content="%PUBLIC_URL%/img/og-newsletter.jpg" /> {/* Use a representative image */}
+      <meta property="og:url" content="https://infosuraj.com/subscribe" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Subscribe Newsletter - INFOSURAJ" />
+      <meta name="twitter:description" content="Join the INFOSURAJ newsletter to get the latest updates, exclusive content, and insights directly to your inbox." />
+      <meta name="twitter:image" content="%PUBLIC_URL%/img/og-newsletter.jpg" />
+    </Helmet>
+    
+    <div className="container-center">
       <style>{customStyles}</style>
       <div className="card">
         {/* Banner at the very top of the card */}
@@ -347,6 +361,7 @@ const SubscribeForm = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

@@ -2285,7 +2285,7 @@ logo-main{
 
 .rounded-div {
   border-radius: 50%;
-  width: 150%;
+  /* width: 150%; */
   height: 750%;
   position: absolute;
   left: 50%;
@@ -4071,4 +4071,131 @@ span.page-numbers:hover:not(.current) {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+
+.slick-dots li button:before {
+  color: #333; /* A dark gray for light backgrounds */
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #000; /* Black for the active dot in light mode */
+  opacity: 1;
+}
+
+
+/* --- 2. Dark Mode (Triggered by your '.odd' class) Styles --- */
+/* These styles will ONLY apply when the <body> tag has the class "odd". */
+/* This overrides the default styles above. */
+
+body.odd .slick-dots li button:before {
+  color: #FFF; /* White for dark backgrounds */
+  opacity: 0.5;
+}
+
+body.odd .slick-dots li.slick-active button:before {
+  color: #FFF; /* A brighter white for the active dot in dark mode */
+  opacity: 1;
+}
+
+:root {
+  --arrow-bg-color: rgba(0, 0, 0, 0.5);
+  --arrow-icon-color: #fff;
+}
+
+body.odd { /* dark mode */
+  --arrow-bg-color: rgba(255, 255, 255, 0.2);
+  --arrow-icon-color: #fff;
+}
+
+.resume-section {
+  margin-top: 20px;
+  padding: 80px 20px;
+  background-color: #f4f7f6; /* Light background for the page */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* For Dark Mode (if your body has an 'odd' class) */
+body.odd .resume-section {
+  background-color: #1a1a1a;
+}
+
+.resume-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* --- CTA Button Styles --- */
+.cta-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #007bff; /* A nice, standout blue */
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.cta-button .icon {
+  margin-left: 10px;
+  font-size: 1.2rem;
+}
+
+/* --- PDF Viewer Styles --- */
+.pdf-viewer-container {
+  width: 100%;
+  /* A4 paper aspect ratio is ~1:1.414 */
+  aspect-ratio: 1 / 1.414;
+  max-height: 85vh; /* Prevents it from being too tall on long screens */
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the iframe corners are rounded */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.odd .pdf-viewer-container {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.pdf-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Add this to your main CSS file */
+
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color); /* Uses your theme's primary color or a fallback */
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+  margin-top: 10px; /* Adds some space above the button */
+  display: inline-block;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
 }

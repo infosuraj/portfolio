@@ -3,7 +3,6 @@ import {
   EditButton,
   DeleteButton,
 } from "../../components/Miscellaneous/ManualButtons";
-import { transformImageKitUrl } from "../../utils/ImageKitUrlModify";
 
 // ProjectsTab component (no changes needed here for thumbnails directly)
 export const ProjectsTab = ({ projects, onEdit, onDelete, onAddNew }) => (
@@ -70,7 +69,6 @@ const initialFormState = {
   liveSite: "#",
   gallery: [],
   selected: false,
-  // --- ADDED: Thumbnail initial state ---
   thumbnail: {
     smallScreen: "",
     largeScreen: "",
@@ -211,43 +209,31 @@ export const ProjectForm = ({ project, onSave, onCancel, onImageUpload }) => {
     }));
   };
 
-  const handleRemoveImage = (indexToRemove, urlToRemove) => {
-    const updatedGallery = formData.gallery.filter(
-      (_, i) => i !== indexToRemove
+  const handleRemoveImage = (urlToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      gallery: prev.gallery.filter((item) => item.url !== urlToRemove)
+    }));
+    setFilesToUpload((prev) =>
+      prev.filter((file) => URL.createObjectURL(file) !== urlToRemove)
     );
-    setFormData((prev) => ({ ...prev, gallery: updatedGallery }));
-
-    if (urlToRemove.startsWith("blob:")) {
-      const blobUrlsInGallery = formData.gallery.filter((url) =>
-        url.startsWith("blob:")
-      );
-      const blobIndex = blobUrlsInGallery.indexOf(urlToRemove);
-      if (blobIndex !== -1) {
-        setFilesToUpload((prevFiles) =>
-          prevFiles.filter((_, i) => i !== blobIndex)
-        );
-      }
-    }
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Upload main gallery images
-    const existingImageUrls = formData.gallery.filter(
-      (url) => !url.startsWith("blob:")
+    const uploadedGalleryResults = await Promise.all(
+      filesToUpload.map((file) => onImageUpload(file, "projects/gallery"))
     );
-
-    const uploadedGalleryUrls = await Promise.all(
-      filesToUpload.map((file) => onImageUpload(file, "projects/gallery")) // Consider a subfolder for gallery
-    );
-    const newSuccessfulGalleryUrls = uploadedGalleryUrls.filter((url) => url !== null);
+    const uploadedGalleryItems = uploadedGalleryResults.filter(res => res !== null);
 
     // --- ADDED: Upload thumbnail images ---
     let smallScreenThumbnailUrl = formData.thumbnail.smallScreen;
     if (smallScreenThumbnailFile) {
-      const url = await onImageUpload(smallScreenThumbnailFile, "projects/thumbnails"); // Subfolder for thumbnails
-      if (url) smallScreenThumbnailUrl = url;
+      const uploadData = await onImageUpload(smallScreenThumbnailFile, "projects/thumbnails"); // Subfolder for thumbnails
+      if (uploadData) smallScreenThumbnailUrl = uploadData.url;
       else console.error("Small screen thumbnail failed to upload.");
     } else if (formData.thumbnail.smallScreen.startsWith("blob:")) {
       // If it was a preview but no file was uploaded (meaning it was removed)
@@ -256,8 +242,8 @@ export const ProjectForm = ({ project, onSave, onCancel, onImageUpload }) => {
 
     let largeScreenThumbnailUrl = formData.thumbnail.largeScreen;
     if (largeScreenThumbnailFile) {
-      const url = await onImageUpload(largeScreenThumbnailFile, "projects/thumbnails");
-      if (url) largeScreenThumbnailUrl = url;
+      const uploadData = await onImageUpload(largeScreenThumbnailFile, "projects/thumbnails");
+      if (uploadData) largeScreenThumbnailUrl = uploadData.url;
       else console.error("Large screen thumbnail failed to upload.");
     } else if (formData.thumbnail.largeScreen.startsWith("blob:")) {
         // If it was a preview but no file was uploaded (meaning it was removed)
@@ -268,7 +254,14 @@ export const ProjectForm = ({ project, onSave, onCancel, onImageUpload }) => {
     // Combine all data for saving
     const dataToSave = {
       ...formData,
-      gallery: [...existingImageUrls, ...newSuccessfulGalleryUrls],
+      gallery: [
+        ...formData.gallery.filter(item => {
+          // Handle both string and object cases
+          const url = typeof item === "string" ? item : item.url;
+          return url && !url.startsWith("blob:");
+        }),
+        ...uploadedGalleryItems, // new uploaded items
+      ],
       role: formData.role
         .split(",")
         .map((s) => s.trim())
@@ -499,26 +492,15 @@ export const ProjectForm = ({ project, onSave, onCancel, onImageUpload }) => {
           <label>Project Gallery</label>
           <div className="admin_gallery-preview">
             {formData.gallery &&
-              formData.gallery.map((url, index) => (
+              formData.gallery.map((item, index) => (
                 <div key={index} className="admin_gallery-item">
-                  {(() => {
-                    const isVideo = url.endsWith(".mp4") || url.includes("video");
-                    let thumbnailImage = '';
-                    if (url) {
-                      if (isVideo) {
-                        thumbnailImage = transformImageKitUrl(url, { width: 800, quality: 80, format: 'auto', isThumbnail: true });
-                      } else {
-                        // Use the transformImageKitUrl function for images
-                        thumbnailImage = transformImageKitUrl(url, {width: 100, height: 100, crop: true, quality: 80, format: "auto"});
-                      }
-                    }
-                    return (
-                      <img src={thumbnailImage} alt={`Preview ${index + 1}`} />
-                    );
-                  })()}
+                  <img
+                    src={item.thumbnail || item.url} // use saved thumbnail directly
+                    alt={`Preview ${index + 1}`}
+                  />
                   <button
                     type="button"
-                    onClick={() => handleRemoveImage(index, url)}
+                    onClick={() => handleRemoveImage(item.url)}
                     className="admin_gallery-remove-btn"
                   >
                     ×

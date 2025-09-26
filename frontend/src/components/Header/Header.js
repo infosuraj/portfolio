@@ -59,9 +59,7 @@ const Header = () => {
       if (profile?.resume) {
         newMenu.push({
           label: "Resume",
-          href: profile?.resume,
-          external: true,
-          download: true,
+          href: '/resume',
         });
       }
     }

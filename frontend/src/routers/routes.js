@@ -14,6 +14,7 @@ import Affiliate from "../themes/affiliate";
 import SubscribeForm from "../themes/SubscribeForm";
 import UnsubscribeForm from "../themes/UnsubscribeForm";
 import NotFoundPage from "../themes/NotFoundPage";
+import ResumeViewer from "../themes/resume";
 
 const MyRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const MyRoutes = () => {
     <Route path="/helpful-resources" element={<Affiliate />} />
     <Route path="/subscribe" element={<SubscribeForm />} />
     <Route path="/unsubscribe" element={<UnsubscribeForm />} />
+    <Route path="/resume" element={<ResumeViewer />} />
         {/* Add more routes as needed */}
     <Route path="*" element={<NotFoundPage />} />
       </Routes>

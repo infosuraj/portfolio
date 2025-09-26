@@ -11,6 +11,7 @@ import LenisScroll from "../components/Header/LenisScroll";
 
 // Import the AffiliateSection you previously created
 import AffiliateSection from "../components/Affiliate/AffiliateSection";
+import { Helmet } from "react-helmet";
 
 const Affiliate = () => {
   // You might not need profile context here unless your affiliate page
@@ -24,12 +25,29 @@ const Affiliate = () => {
   // }, [profile, loading]);
 
   return (
-    <div>
+    <>
+    <Helmet>
       <title>Helpful Resources & Tools - INFOSURAJ</title>
       <meta
         name="description"
         content="Discover a curated list of helpful resources, tools, and recommended products that INFOSURAJ uses and trusts for web development and design."
       />
+      <link rel="canonical" href="https://www.infosuraj.com/helpful-resources" />
+      <meta property="og:title" content="Helpful Resources & Tools - INFOSURAJ" />
+      <meta
+        property="og:description"
+        content="Discover a curated list of helpful resources, tools, and recommended products that INFOSURAJ uses and trusts for web development and design."
+      />
+      <meta property="og:url" content="https://www.infosuraj.com/helpful-resources" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Helpful Resources & Tools - INFOSURAJ" />
+      <meta
+        name="twitter:description"
+        content="Discover a curated list of helpful resources, tools, and recommended products that INFOSURAJ uses and trusts for web development and design."
+      />
+    </Helmet>
+    <div>
       <MagicCursor />
       <Preloader />
       <LenisScroll />{" "}
@@ -48,6 +66,7 @@ const Affiliate = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

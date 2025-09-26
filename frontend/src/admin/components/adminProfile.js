@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { DeleteButton, AddButton } from "../../components/Miscellaneous/ManualButtons";
-import { transformImageKitUrl } from "../../utils/ImageKitUrlModify";
 
 // Define empty states for clarity and consistency
 const emptyFAQ = { question: "", answer: "" };
@@ -233,7 +232,6 @@ export const AdminProfile = ({ profile, onSave, onCancel, onImageUpload }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prepare image and PDF fields for upload
         const fieldsToUpload = [
             "profileImage",
             "logoLight",
@@ -242,17 +240,16 @@ export const AdminProfile = ({ profile, onSave, onCancel, onImageUpload }) => {
             "resume",
         ];
 
-        // Upload main images and resume
         const uploadedUrls = await Promise.all(
             fieldsToUpload.map(async (field) => {
                 const file = filesToUpload[field];
                 if (file) {
-                    const url = await onImageUpload(file, "profile"); // Assuming 'profile' is a folder name or category
-                    if (!url) {
+                    const uploadData = await onImageUpload(file, "profile"); // Assuming 'profile' is a folder name or category
+                    if (!uploadData) {
                         alert(`Failed to upload ${field}. Please try again.`);
                         return formData[field]; // Keep the old URL or current preview if upload fails
                     }
-                    return url;
+                    return uploadData.url;
                 }
                 return formData[field]; // Keep existing URL if no new file selected
             })
@@ -267,11 +264,11 @@ export const AdminProfile = ({ profile, onSave, onCancel, onImageUpload }) => {
                 let newIconUrl = social.Icon; // Default to existing icon URL
 
                 if (file) {
-                    const url = await onImageUpload(file, "social-icons"); // Assuming "social-icons" is a folder for these
-                    if (!url) {
+                    const uploadData = await onImageUpload(file, "social-icons"); // Assuming "social-icons" is a folder for these
+                    if (!uploadData) {
                         alert(`Failed to upload icon for ${social.Name}. Please try again.`);
                     } else {
-                        newIconUrl = url;
+                        newIconUrl = uploadData.url;
                     }
                 }
                 return { ...social, Icon: newIconUrl };
@@ -425,7 +422,7 @@ export const AdminProfile = ({ profile, onSave, onCancel, onImageUpload }) => {
                                             src={
                                                 formData[field].startsWith("blob:")
                                                     ? formData[field]
-                                                    : transformImageKitUrl(formData[field])
+                                                    : formData[field]
                                             }
                                             alt={field.replace(/([A-Z])/g, " $1")}
                                             className="admin_gallery-item"
@@ -544,8 +541,7 @@ export const AdminProfile = ({ profile, onSave, onCancel, onImageUpload }) => {
                                             <img
                                                 src={
                                                     social.Icon.startsWith("blob:")
-                                                        ? social.Icon
-                                                        : transformImageKitUrl(social.Icon)
+                                                        ? social.Icon : social.Icon
                                                 }
                                                 alt={`${social.Name} Icon`}
                                                 className="admin_gallery-item"

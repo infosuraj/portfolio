@@ -21,6 +21,7 @@ import {
   saveData,
   deleteData,
 } from "./utils/adminUtility";
+import { Helmet } from "react-helmet";
 
 const Admin = () => {
   const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
@@ -551,9 +552,9 @@ const Admin = () => {
 
   const handleImageUpload = async (file, folder) => {
     try {
-      const url = await handleFileUpload(file, folder);
+      const {url, thumbnail} = await handleFileUpload(file, folder);
       setMessage("File uploaded successfully!");
-      return url;
+      return { url, thumbnail };
     } catch (error) {
       setMessage(`Upload Error: ${error.message}`);
       return null;
@@ -798,13 +799,16 @@ const Admin = () => {
   };
 
   return (
-    <div className="admin_container">
+    <>
+    <Helmet>
       <title>INFOSURAJ Admin Panel</title>
       <meta name="robots" content="noindex, nofollow" />
       <meta
         name="description"
         content="Admin dashboard for INFOSURAJ website management."
       />
+    </Helmet>
+    <div className="admin_container">
       <header className="admin_header">
         <div className="admin_header-content">
           <div className="admin_header-top">
@@ -926,6 +930,7 @@ const Admin = () => {
         {renderView()}
       </main>
     </div>
+    </>
   );
 };
 

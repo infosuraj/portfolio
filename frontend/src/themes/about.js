@@ -16,6 +16,7 @@ import OffcanvasMenu from "../components/Miscellaneous/OffcanvasMenu";
 import MagicCursor from "../components/Miscellaneous/MagicCursor";
 import LenisScroll from "../components/Header/LenisScroll";
 import { useProfile } from "../context/profileContext";
+import { Helmet } from "react-helmet";
 
 const About = () => {
   const { profile, loading } = useProfile();
@@ -28,12 +29,35 @@ const About = () => {
     }
   }, [profile, loading]);
   return (
-    <div>
+    <>
+    <Helmet>
       <title>About - INFOSURAJ</title>
       <meta
         name="description"
         content="Learn more about Suraj, my journey in web development, design philosophy, and what drives my passion for creating engaging digital experiences."
       />
+      <meta
+        name="keywords"
+        content="About Suraj, Web Developer Journey, Design Philosophy, Digital Experiences, INFOSURAJ"
+      />
+      <link rel="canonical" href="https://www.infosuraj.com/about" />
+      <meta property="og:title" content="About - INFOSURAJ" />
+      <meta
+        property="og:description"
+        content="Learn more about Suraj, my journey in web development, design philosophy, and what drives my passion for creating engaging digital experiences."
+      />
+      <meta property="og:url" content="https://www.infosuraj.com/about" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="About - INFOSURAJ" />
+      <meta
+        name="twitter:description"
+        content="Learn more about Suraj, my journey in web development, design philosophy, and what drives my passion for creating engaging digital experiences."
+      />
+      <meta name="twitter:url" content="https://www.infosuraj.com/about" />
+    </Helmet>
+    
+    <div>
       <MagicCursor />
       <Preloader />
       <LenisScroll />
@@ -53,6 +77,7 @@ const About = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

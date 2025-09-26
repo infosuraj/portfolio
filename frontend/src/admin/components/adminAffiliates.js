@@ -102,7 +102,7 @@ export const AffiliateForm = ({ affiliate, onSave, onCancel, onImageUpload }) =>
         // Assuming onImageUpload can handle 'logos' folder or similar
         const uploadedUrl = await onImageUpload(file, 'affiliates'); // Use a specific folder for logos
         if (uploadedUrl) {
-            setFormData((prev) => ({ ...prev, logo: uploadedUrl }));
+            setFormData((prev) => ({ ...prev, logo: uploadedUrl.url }));
         }
     };
 
@@ -110,7 +110,7 @@ export const AffiliateForm = ({ affiliate, onSave, onCancel, onImageUpload }) =>
         const file = e.target.files[0];
         const uploadedUrl = await onImageUpload(file, 'affiliates/affiliate_image');
         if (uploadedUrl) {
-            setFormData((prev) => ({ ...prev, image: uploadedUrl }));
+            setFormData((prev) => ({ ...prev, image: uploadedUrl.url }));
         }
     };
 

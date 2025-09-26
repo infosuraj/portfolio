@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageKit Uploader Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; }
+        form { display: flex; flex-direction: column; }
+        label { margin-top: 10px; font-weight: bold; }
+        input[type="file"], input[type="text"] { margin-top: 5px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 20px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #status, #result { margin-top: 20px; padding: 10px; border-radius: 4px; }
+        #status { background-color: #e2e2e2; }
+        #result { background-color: #d4edda; color: #155724; word-wrap: break-word; }
+        #result a { color: #007bff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ImageKit Uploader Test</h1>
+    <form id="uploadForm">
+        <label for="file">Select File:</label>
+        <input type="file" id="file" name="file" required>
+
+        <label for="folder">Optional Folder:</label>
+        <input type="text" id="folder" name="folder" placeholder="e.g., product-images">
+        
+        <label for="token">Admin Token (required):</label>
+        <input type="text" id="token" name="token" required>
+
+        <button type="submit">Upload File</button>
+    </form>
+
+    <div id="status">Waiting for upload...</div>
+    <div id="result"></div>
+</div>
+
+<script>
+    const form = document.getElementById('uploadForm');
+    const statusDiv = document.getElementById('status');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        statusDiv.textContent = 'Uploading...';
+        resultDiv.textContent = '';
+        
+        const fileInput = document.getElementById('file');
+        const folderInput = document.getElementById('folder');
+        const tokenInput = document.getElementById('token');
+
+        if (!fileInput.files[0]) {
+            statusDiv.textContent = 'Please select a file.';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        
+        if (folderInput.value) {
+            formData.append('folder', folderInput.value);
+        }
+
+        const token = tokenInput.value;
+
+        try {
+            const response = await fetch('http://localhost:5000/api/uploads/upload', { // <-- IMPORTANT: Change this URL to your backend endpoint
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                statusDiv.textContent = 'Upload successful!';
+                resultDiv.innerHTML = `
+                    <p><strong>File URL:</strong> <a href="${data.url}" target="_blank">${data.url}</a></p>
+                    <p><strong>File ID:</strong> ${data.fileId}</p>
+                `;
+            } else {
+                statusDiv.textContent = 'Upload failed!';
+                resultDiv.innerHTML = `<p>Error: ${data.message || 'Unknown error'}</p>`;
+                console.error('Upload Error:', data);
+            }
+
+        } catch (error) {
+            statusDiv.textContent = 'An error occurred during the upload.';
+            resultDiv.innerHTML = `<p>Network Error: ${error.message}</p>`;
+            console.error('Fetch Error:', error);
+        }
+    });
+</script>
+
+</body>
+</html>

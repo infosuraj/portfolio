@@ -1,0 +1,81 @@
+/* Media query for the 'peek' effect on larger screens */
+@media (min-width: 768px) {
+  .slick-slider {
+    margin: 0 -20px;
+  }
+  .slick-list {
+    padding: 0 20px;
+  }
+}
+
+/* General slider styling */
+.slick-slide {
+  padding: 0 10px;
+}
+.slick-dots {
+  bottom: -35px;
+}
+.slick-dots li button:before {
+  font-size: 12px;
+}
+
+/* Add this new rule for the slider's main wrapper (the parent div) */
+.portfolio-gallery {
+  position: relative; /* Ensures the mask is applied correctly */
+
+  /* This creates the fade effect on the left and right edges */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.gallery-item-style {
+  height: 40vh;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: transparent; /* Changed to let the content show through */
+  /* border-radius was removed from here */
+  margin: 0 20px; /* Increased margin for more spacing */
+}
+
+@media (max-width: 768px) {
+  .gallery-item-style {
+    height: auto;
+    aspect-ratio: 9 / 16;
+    max-height: 40vh;
+    width: 100%;
+    margin: 0; /* Removed margin for mobile edge-to-edge look */
+  }
+
+  /* On mobile, the fade is not needed */
+  .portfolio-gallery {
+    mask-image: none;
+  }
+}
+
+.gallery-item-style video,
+.gallery-item-style img {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 15px; /* Only the content has rounded corners */
+  border: 1px solid #e0e0e0; /* Optional: adds a subtle border around the content */
+}
+
+/* Add styling for custom video controls here if needed */
+/* Example:
+.video-container {
+  position: relative;
+}
+.video-controls {
+  ...
+}
+*/

@@ -90,7 +90,7 @@ export const ClientForm = ({ client, onSave, onCancel, onImageUpload }) => {
     if (uploadedUrl) {
       setFormData((prev) => ({
         ...prev,
-        clientImage: uploadedUrl,
+        clientImage: uploadedUrl.url,
       }));
     }
   };

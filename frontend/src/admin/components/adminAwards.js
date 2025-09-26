@@ -74,7 +74,7 @@ export const AwardForm = ({ award, onSave, onCancel, onImageUpload }) => {
     const file = e.target.files[0];
     const uploadedUrl = await onImageUpload(file, "awards");
     if (uploadedUrl) {
-      setFormData((prev) => ({ ...prev, image: uploadedUrl }));
+      setFormData((prev) => ({ ...prev, image: uploadedUrl.url }));
     }
   };
 

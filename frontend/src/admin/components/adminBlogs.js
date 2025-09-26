@@ -81,7 +81,7 @@ export const BlogForm = ({ blog, onSave, onCancel, onImageUpload }) => {
     const file = e.target.files[0];
     const uploadedUrl = await onImageUpload(file, 'blogs');
     if (uploadedUrl) {
-      setFormData((prev) => ({ ...prev, image: uploadedUrl }));
+      setFormData((prev) => ({ ...prev, image: uploadedUrl.url }));
     }
   };
 

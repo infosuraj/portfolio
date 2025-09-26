@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Affiliate.css'; // Import the CSS
-import { transformImageKitUrl } from '../../utils/ImageKitUrlModify';
+import { transformImageKitUrl } from '../../utils/ImageKitUrlModify'; // Import the utility function
 
 const AffiliateCard = ({ affiliate, onQuickView }) => { // Added onQuickView prop
     const [showFullDescription, setShowFullDescription] = useState(false);

@@ -189,7 +189,7 @@ export const SkillForm = ({ skill, onSave, onCancel, onImageUpload }) => {
       if (uploadedUrl) {
         updateFormData((prev) => {
           const updatedItems = [...prev.items];
-          updatedItems[index].icon = uploadedUrl;
+          updatedItems[index].icon = uploadedUrl.url;
           return { ...prev, items: updatedItems };
         });
       }
