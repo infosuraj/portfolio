@@ -4188,7 +4188,7 @@ body.odd .pdf-viewer-container {
 .read-more-btn {
   background: none;
   border: none;
-  color: var(--primary-color); /* Uses your theme's primary color or a fallback */
+  color: var(--primary-color,  #5700EF); /* Uses your theme's primary color or a fallback */
   cursor: pointer;
   font-weight: bold;
   padding: 0;

@@ -32,9 +32,7 @@ const Footer = ({
     if (profile?.resume) {
       newResource.push({
         label: "Resume",
-        href: profile?.resume,
-        external: true,
-        download: true,
+        href: '/resume',
       });
     }
 
