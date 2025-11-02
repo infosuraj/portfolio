@@ -1,6 +1,6 @@
 const getAutoReplyTemplate = ({ name, email, message }) => {
   const LOGO_URL =
-    "https://ik.imagekit.io/upzxi2yzb/tr:w-800,q-100,fo-auto/profile/Asset_4_ucSXtHMrz.svg";
+    "https://ik.imagekit.io/tr:w-800,q-100,fo-auto/upzxi2yzb/profile/main-logo-email.png";
   const BANNER_URL =
     "https://ik.imagekit.io/upzxi2yzb/tr:w-800,q-100,fo-auto/Mail%20Subscribe%20Assets/email-banner.png";
   const BRAND_COLOR = "#007bff";

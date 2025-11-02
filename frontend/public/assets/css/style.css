@@ -3305,7 +3305,8 @@ body.odd .reveal-text .char {
   }
 }
 .contact-form .list-group-item .content {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  word-break: break-all;
   font-weight: 500;
   color: var(--primary-t-color);
 }
