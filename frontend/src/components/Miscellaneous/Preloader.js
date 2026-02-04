@@ -34,13 +34,13 @@ const Preloader = () => {
 
       // Preloader hide animation
       .to(preloaderRef.current, {
-        y: -1000,
+        y: "-100%",
         duration: 0.8,
+        ease: "power3.inOut",
+        onComplete: () => {
+          preloaderRef.current.remove();
+        }
       })
-      .to(preloaderRef.current, {
-        zIndex: -1,
-        display: "none",
-      });
     };
 
     if (document.readyState === 'complete') {
@@ -57,19 +57,21 @@ const Preloader = () => {
         <path 
           id="loader" 
           ref={svgRef}
-          d="M0,1005S175,995,500,995s500,5,500,5V0H0Z"
+          d="M0,1200S175,1100,500,1100s500,100,500,100V0H0Z"
         />
       </svg>
 
       <div className="loader-container">
         <div className="loaded" ref={loadedRef}>
-          <span>L</span>
-          <span>O</span>
-          <span>A</span>
-          <span>D</span>
           <span>I</span>
           <span>N</span>
-          <span>G</span>
+          <span>F</span>
+          <span>O</span>
+          <span>S</span>
+          <span>U</span>
+          <span>R</span>
+          <span>A</span>
+          <span>J</span>
         </div>
       </div>
     </div>

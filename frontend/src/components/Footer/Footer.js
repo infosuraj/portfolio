@@ -220,11 +220,12 @@ const Footer = ({
           height: 70px;
           padding: 5px;
           border-radius: 50%;
-          background-color: rgb(233, 233, 233);
+          background-color: #ffffff;
           border: 1px solid rgb(233, 233, 233);
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
           margin-bottom: 15px;
           flex-shrink: 0;
+          overflow: hidden;
         }
 
         .footer-logo-img {
@@ -232,6 +233,7 @@ const Footer = ({
           max-height: 98%;
           height: auto;
           object-fit: contain;
+          overflow: hidden;
         }
 
         .subscribe-text {

@@ -1,36 +1,46 @@
-/* Media query for the 'peek' effect on larger screens */
+/* --- YOUR ORIGINAL MAIN SLIDER STYLES (RETAINED) --- */
 @media (min-width: 768px) {
-  .slick-slider {
-    margin: 0 -20px;
-  }
-  .slick-list {
-    padding: 0 20px;
-  }
+  .portfolio-gallery .slick-slider { margin: 0 -20px; }
+  .portfolio-gallery .slick-list { padding: 0 20px; }
 }
 
-/* General slider styling */
-.slick-slide {
-  padding: 0 10px;
-}
-.slick-dots {
-  bottom: -35px;
-}
-.slick-dots li button:before {
-  font-size: 12px;
+
+.overlay-slider-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Add this new rule for the slider's main wrapper (the parent div) */
+/* ✅ NEW */
+.overlay-slider-wrapper .slick-slider,
+.overlay-slider-wrapper .slick-list {
+  height: 100% !important;
+}
+.overlay-slider-wrapper .slick-slide {
+  display: flex !important;
+}
+.overlay-slider-wrapper .slick-slide > div {
+  width: 100%;
+}
+
+/* your existing */
+.overlay-slider-wrapper .slick-list,
+.overlay-slider-wrapper .slick-track,
+.overlay-slider-wrapper .slick-slide,
+.overlay-slider-wrapper .slick-slide > div {
+  height: 100%;
+}
+
+
+.overlay-slider-wrapper .slick-track {
+  display: flex !important;
+  align-items: stretch !important;   /* important */
+}
+
+
 .portfolio-gallery {
-  position: relative; /* Ensures the mask is applied correctly */
-
-  /* This creates the fade effect on the left and right edges */
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 8%,
-    black 92%,
-    transparent
-  );
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
 .gallery-item-style {
@@ -40,9 +50,9 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-color: transparent; /* Changed to let the content show through */
-  /* border-radius was removed from here */
-  margin: 0 20px; /* Increased margin for more spacing */
+  background-color: transparent;
+  margin: 0 20px;
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -51,31 +61,120 @@
     aspect-ratio: 9 / 16;
     max-height: 40vh;
     width: 100%;
-    margin: 0; /* Removed margin for mobile edge-to-edge look */
+    margin: 0;
   }
-
-  /* On mobile, the fade is not needed */
-  .portfolio-gallery {
-    mask-image: none;
-  }
+  .portfolio-gallery { mask-image: none; }
 }
 
 .gallery-item-style video,
 .gallery-item-style img {
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 rgba(0, 0, 0, 0.1));
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 15px; /* Only the content has rounded corners */
-  border: 1px solid #e0e0e0; /* Optional: adds a subtle border around the content */
+  border-radius: 15px;
+  border: 1px solid #e0e0e0;
 }
 
-/* Add styling for custom video controls here if needed */
-/* Example:
-.video-container {
+.zoom-trigger {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 5;
+}
+
+/* --- THE MERGED OVERLAY STYLES --- */
+
+.portfolio-custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-frame {
+  aspect-ratio: 3 / 4;
+  width: min(90vw, calc(85vh * 3 / 4));
+  height: min(85vh, calc(90vw * 4 / 3));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* this is the “transparent fill” look you want */
+  /* background: rgba(0,0,0,0.35); */
+  border-radius: 18px;
+  overflow: hidden;
   position: relative;
 }
-.video-controls {
-  ...
+
+.overlay-slider-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
-*/
+
+/* Merging your variable width logic with the isolation fix */
+.overlay-slide-item{
+  height: 100% !important;
+  width: 100%;
+  padding: 0 !important;
+  display: block !important;  /* not flex */
+}
+
+.overlay-media-container{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(0,0,0,0.35); */
+  overflow: hidden;
+}
+
+.overlay-media{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+.overlay-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 5;
+  background: rgba(0,0,0,0.5);
+  border: 0;
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Custom Arrows styling from your main design */
+.portfolio-custom-overlay .slick-prev,
+.portfolio-custom-overlay .slick-next {
+  z-index: 10001;
+}

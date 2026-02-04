@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { transformImageKitUrl } from "../../utils/ImageKitUrlModify";
@@ -9,63 +9,56 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Custom Next Arrow Component
-const NextArrow = ({ className, style, onClick, isDarkMode }) => {
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        right: "25px",
-        zIndex: 1,
-        background: "var(--arrow-bg-color)", // background variable
-        borderRadius: "50%",
-        height: "40px",
-        width: "40px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      onClick={onClick}
-    >
-      <i
-        className="bi bi-arrow-right-short"
-        style={{ color: "var(--arrow-icon-color)" }} // ✅ use arrow icon variable
-      ></i>
-    </div>
-  );
-};
+// Custom Next Arrow Component for Slider
+const NextArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{
+      ...style,
+      right: "25px",
+      zIndex: 1,
+      background: "var(--arrow-bg-color)",
+      borderRadius: "50%",
+      height: "40px",
+      width: "40px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+    onClick={onClick}
+  >
+    <i className="bi bi-arrow-right-short" style={{ color: "var(--arrow-icon-color)" }}></i>
+  </div>
+);
 
-// Custom Previous Arrow Component
-const PrevArrow = ({ className, style, onClick, isDarkMode }) => {
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        left: "25px",
-        zIndex: 1,
-        background: "var(--arrow-bg-color)", // background variable
-        borderRadius: "50%",
-        height: "40px",
-        width: "40px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      onClick={onClick}
-    >
-      <i
-        className="bi bi-arrow-left-short"
-        style={{ color: "var(--arrow-icon-color)" }} // ✅ use arrow icon variable
-      ></i>
-    </div>
-  );
-};
+// Custom Previous Arrow Component for Slider
+const PrevArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{
+      ...style,
+      left: "25px",
+      zIndex: 1,
+      background: "var(--arrow-bg-color)",
+      borderRadius: "50%",
+      height: "40px",
+      width: "40px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+    onClick={onClick}
+  >
+    <i className="bi bi-arrow-left-short" style={{ color: "var(--arrow-icon-color)" }}></i>
+  </div>
+);
 
 const PortfolioSingleSection = () => {
   const [portfolio, setPortfolio] = useState(null);
   const { projectId } = useParams();
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const overlaySliderRef = useRef(null);
+  const [activeOverlayIndex, setActiveOverlayIndex] = useState(0);
 
   useEffect(() => {
     const baseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -77,13 +70,37 @@ const PortfolioSingleSection = () => {
 
   const galleryItems = useMemo(() => {
     if (!portfolio?.gallery || portfolio.gallery.length === 0) return [];
-
     return portfolio.gallery.map((item) => ({
       url: item.url,
       thumbnail: item.thumbnail || item.url,
       isVideo: item.url.endsWith(".mp4") || item.url.includes("video"),
     }));
   }, [portfolio]);
+
+  // Handlers for Overlay Navigation
+  const openOverlay = (index) => {
+  setActiveOverlayIndex(index);
+  setIsOverlayOpen(true);
+  document.body.style.overflow = "hidden";
+
+  setTimeout(() => {
+    overlaySliderRef.current?.slickGoTo(index, true);
+
+    // force play active slide video
+    setTimeout(() => {
+      const activeVideo = document.querySelector(
+        ".overlay-slider-wrapper .slick-slide.slick-active video"
+      );
+      activeVideo?.play().catch(() => {});
+    }, 50);
+  }, 50);
+};
+
+
+  const closeOverlay = () => {
+    setIsOverlayOpen(false);
+    document.body.style.overflow = "auto";
+  };
 
   if (!portfolio) return <p>Loading...</p>;
 
@@ -97,19 +114,49 @@ const PortfolioSingleSection = () => {
     centerMode: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    variableWidth: true, // default (desktop/tablet)
+    variableWidth: true,
     responsive: [
       {
-        breakpoint: 768, // Mobile breakpoint
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           centerMode: false,
-          variableWidth: false, // disable variable width on mobile
+          variableWidth: false,
         },
       },
     ],
   };
+  
+  const overlaySliderSettings = {
+  dots: true,
+  dotsClass: "slick-dots overlay-dots",
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  centerMode: false,      // IMPORTANT
+  variableWidth: false,
+  arrows: true,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  swipeToSlide: true,
+  beforeChange: () => {
+  document.querySelectorAll(".overlay-slider-wrapper video").forEach(v => {
+    v.pause();
+    v.currentTime = 0;
+  });
+},
+afterChange: (current) => {
+  setActiveOverlayIndex(current);
 
+  // play only the CURRENT visible slide's video
+  setTimeout(() => {
+    const activeSlide = document.querySelector(
+      ".overlay-slider-wrapper .slick-slide.slick-active video"
+    );
+    activeSlide?.play().catch(() => {});
+  }, 50);
+},
+};
 
   return (
     <section className="content">
@@ -118,27 +165,28 @@ const PortfolioSingleSection = () => {
           {portfolio.categories?.length > 0 && (
             <div className="portfolio-terms">
               {portfolio.categories.map((cat, idx) => (
-                <label key={idx} className="terms">
-                  {cat.toUpperCase()}
-                </label>
+                <label key={idx} className="terms">{cat.toUpperCase()}</label>
               ))}
             </div>
           )}
           {portfolio.date && <span className="date">{portfolio.date}</span>}
         </div>
-        {/* Portfolio Gallery */}
-        <div className="portfolio-gallery mt-4" style={{padding: "20px" }}>
-          
-          <Slider {...sliderSettings}>
-            {galleryItems.map((item, idx) => (
-              <div key={idx}>
-                <div className="gallery-item-style">
+
+        {/* Portfolio Slider Section */}
+        <div className="portfolio-gallery mt-4">
+           <Slider {...sliderSettings}>
+             {galleryItems.map((item, idx) => (
+                <div key={idx} style={{ width: 'auto' }}>
+                   <div className="gallery-item-style">
                   {item.isVideo ? (
                     <video
-                      src={item.url}
-                      controls
-                      loop
-                      muted
+                     src={item.url} 
+                      className="only-play-pause"
+                      controls 
+                      controlsList="nodownload nofullscreen noremoteplayback" 
+                      autoPlay={false}
+                      loop 
+                      muted 
                       poster={item.thumbnail}
                     />
                   ) : (
@@ -147,14 +195,57 @@ const PortfolioSingleSection = () => {
                       alt={`slide-${idx}`}
                     />
                   )}
+                  {/* Overlay trigger button */}
+                  <div className="zoom-trigger" onClick={() => openOverlay(idx)}>
+                        <i className="bi bi-arrows-angle-expand"></i>
+                      </div>
+                   </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
+             ))}
+           </Slider>
         </div>
-        {/* ... Portfolio Info section remains unchanged ... */}
-        <div className="row justify-content-between">
-          <h2>{portfolio.title}</h2>
+
+        {/* SWIPEABLE OVERLAY */}
+        {isOverlayOpen && (
+  <div className="portfolio-custom-overlay" onClick={closeOverlay}>
+    <div className="overlay-frame" onClick={(e) => e.stopPropagation()}>
+      <button className="overlay-close" onClick={closeOverlay}>&times;</button>
+
+      <div className="overlay-slider-wrapper">
+        <Slider ref={overlaySliderRef} {...overlaySliderSettings}>
+                  {galleryItems.map((item, idx) => {
+                    const isActive = activeOverlayIndex === idx;
+
+                    return (
+                      <div key={idx} className={`overlay-slide-item ${isActive ? 'active' : ''}`}>
+                        <div className="overlay-media-container">
+                          {item.isVideo ? (
+                            <video
+                                src={item.url}
+                                controls
+                                playsInline
+                                autoPlay
+                                className="overlay-media"
+                              />
+                          ) : (
+                            <img src={item.url} alt="Full view" className="overlay-media" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </Slider>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+        {/* Portfolio Description Section */}
+        <div className="row justify-content-between mt-5">
+          <div className="col-12">
+            <h2>{portfolio.title}</h2>
+          </div>
           <div className="col-12 col-lg-5">
             <div className="heading">
               {portfolio.description && <p>{portfolio.description}</p>}
@@ -173,9 +264,7 @@ const PortfolioSingleSection = () => {
                   <h6 className="title mt-0 mb-1 mb-md-3">Role/Services</h6>
                   <div className="portfolio-terms">
                     {portfolio.role.map((role, idx) => (
-                      <label key={idx} className="terms">
-                        {role}
-                      </label>
+                      <label key={idx} className="terms">{role}</label>
                     ))}
                   </div>
                 </div>
@@ -193,23 +282,10 @@ const PortfolioSingleSection = () => {
                 </div>
               )}
             </div>
-            {portfolio.liveSite && portfolio.liveSite !== "#" && (
-              <div className="socials item">
-                <a
-                  className="nav-link d-inline-flex swap-icon ms-0"
-                  href={portfolio.liveSite}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Live Site <i className="icon bi bi-arrow-right-short"></i>
-                </a>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* View All Button */}
       <div className="align-items-center mt-5 justify-content-center d-flex">
         <a className="btn btn-outline content-btn swap-icon" href="/portfolio">
           View All <i className="icon bi bi-arrow-right-short"></i>
